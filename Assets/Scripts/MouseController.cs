@@ -5,6 +5,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Threading;
 using UnityEngine;
+using System.IO.Ports;
 
 public class MouseController : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class MouseController : MonoBehaviour
 
     float yReal = 0.0f;
 
+    string[] analogData = null;
 
     private void Start()
     {
@@ -27,14 +29,37 @@ public class MouseController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        mouseX = Input.GetAxis("Mouse X") * mouseSpeed * Time.deltaTime;
-        mouseY = Input.GetAxis("Mouse Y") * mouseSpeed * Time.deltaTime;
+        analogData = PlayerMovement.valores;
+        if (analogData != null)
+        {
+            //2 y 3
+            mouseX = int.Parse(analogData[2]);
+            mouseY = int.Parse(analogData[3]);
+        }
 
-        yReal -= mouseY;
+        //mouseX = Input.GetAxis("Mouse X") * mouseSpeed * Time.deltaTime;
+        //mouseY = Input.GetAxis("Mouse Y") * mouseSpeed * Time.deltaTime;
 
-        yReal = Mathf.Clamp(yReal, -90f, 90f);
 
-        cam.localRotation = Quaternion.Euler(yReal, 0f, 0f);
-        transform.Rotate(Vector3.up * mouseX);
+            yReal -= (mouseY - 500) / 500;
+
+            yReal = Mathf.Clamp(yReal, -90f, 90f);
+
+        if ((-(mouseY - 500) / 500) > 0.1 || (-(mouseY - 500) / 500) < -0.1)
+        {
+            cam.localRotation = Quaternion.Euler(-yReal, 0f, 0f);
+        }
+
+
+        if ((-(mouseX - 500) / 500) > 0.1 || (-(mouseX - 500) / 500) < -0.1)
+        {
+            transform.Rotate(Vector3.up * -(mouseX - 500) / 300);
+
+        }
+
+
+
+        //Debug.Log((int)mouseX + " " + (int)mouseY);
+        Debug.Log(-(mouseY - 500) / 1000);
     }
 }

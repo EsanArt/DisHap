@@ -57,7 +57,7 @@ public class PlayerMovement : MonoBehaviour
             x = int.Parse(valores[0]);
             z = int.Parse(valores[1]);
         
-            move = transform.right * -(x-510)/1000f + transform.forward * (z-528)/1000f;
+            move = transform.right * -(x-510)/500f + transform.forward * -(z-528)/500f;
             controller.Move(move * speed * Time.deltaTime);
             velocity.y += gravity * Time.deltaTime;
             controller.Move(velocity * Time.deltaTime);

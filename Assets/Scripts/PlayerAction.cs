@@ -31,6 +31,7 @@ public class PlayerAction : MonoBehaviour
 
     string[] datoBoton = null;
     int boton;
+    int boton2;
 
     // Start is called before the first frame update
     void Start()
@@ -52,7 +53,8 @@ public class PlayerAction : MonoBehaviour
         datoBoton = PlayerMovement.valores;
         if (datoBoton != null)
         {
-            boton = int.Parse(datoBoton[2]);
+            boton = int.Parse(datoBoton[4]);
+            boton2 = int.Parse(datoBoton[5]);
         }
 
         if (holdingBall == true)
@@ -81,7 +83,7 @@ public class PlayerAction : MonoBehaviour
                     isPickableBall = true;
                     canvasScript.ChangePickableBallColor(true);
                 }
-                if (isPickableBall && Input.GetKeyDown(KeyCode.E))
+                if ((isPickableBall) && (Input.GetKeyDown(KeyCode.E) || boton2 == 1))
                 {
                     holdingBall = true;
                     ballCollider.enabled = false;
