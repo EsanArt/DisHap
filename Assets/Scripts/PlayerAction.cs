@@ -29,7 +29,8 @@ public class PlayerAction : MonoBehaviour
     public LayerMask pickableLayer;
     RaycastHit hit;
 
-    string[] datoBoton;
+    string[] datoBoton = null;
+    int boton;
 
     // Start is called before the first frame update
     void Start()
@@ -49,63 +50,65 @@ public class PlayerAction : MonoBehaviour
     void Update()
     {
         datoBoton = PlayerMovement.valores;
-        int boton = int.Parse(datoBoton[2]);
+        if (datoBoton != null)
+        {
+            boton = int.Parse(datoBoton[2]);
+        }
 
-            if (holdingBall == true)
+        if (holdingBall == true)
+        { 
+            if (Input.GetMouseButton(0) || boton == 1)
             {
+                //currentTime = 0.0f;
+                canvasScript.SetValueBar(0);
+                canvasScript.ActivarSlider(true);
 
-                if (boton == 1 || Input.GetMouseButton(0))
+                holdingBall = false;
+                ballCollider.enabled = true;
+                ballRB.useGravity = true;
+                ballRB.AddForce(cam.forward * 400);
+                canvasScript.OcultarCursor(false);
+                canvasScript.ActivarSlider(false);
+                ballTrail.enabled = true;
+            }
+        }
+        else
+        {
+            if (Physics.Raycast(cam.position, cam.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, pickableLayer))
+            {
+                if (isPickableBall == false)
                 {
-                    //currentTime = 0.0f;
-                    canvasScript.SetValueBar(0);
-                    canvasScript.ActivarSlider(true);
+                    isPickableBall = true;
+                    canvasScript.ChangePickableBallColor(true);
+                }
+                if (isPickableBall && Input.GetKeyDown(KeyCode.E))
+                {
+                    holdingBall = true;
+                    ballCollider.enabled = false;
+                    ballRB.useGravity = false;
+                    ballRB.velocity = Vector3.zero;
+                    ballRB.angularVelocity = Vector3.zero;
+                    ball.transform.localRotation = Quaternion.identity;
 
-                    holdingBall = false;
-                    ballCollider.enabled = true;
-                    ballRB.useGravity = true;
-                    ballRB.AddForce(cam.forward * 400);
-                    canvasScript.OcultarCursor(false);
-                    canvasScript.ActivarSlider(false);
-                    ballTrail.enabled = true;
+                    GameController.instance.canScore = false;
+
+                    canvasScript.ChangePickableBallColor(true);
+                    canvasScript.OcultarCursor(true);
+                    ballTrail.enabled = false;
                 }
             }
-            else
+            else if (isPickableBall == true)
             {
-                if (Physics.Raycast(cam.position, cam.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, pickableLayer))
-                {
-                    if (isPickableBall == false)
-                    {
-                        isPickableBall = true;
-                        canvasScript.ChangePickableBallColor(true);
-                    }
-                    if (isPickableBall && Input.GetKeyDown(KeyCode.E))
-                    {
-                        holdingBall = true;
-                        ballCollider.enabled = false;
-                        ballRB.useGravity = false;
-                        ballRB.velocity = Vector3.zero;
-                        ballRB.angularVelocity = Vector3.zero;
-                        ball.transform.localRotation = Quaternion.identity;
-
-                        GameController.instance.canScore = false;
-
-                        canvasScript.ChangePickableBallColor(true);
-                        canvasScript.OcultarCursor(true);
-                        ballTrail.enabled = false;
-                    }
-                }
-                else if (isPickableBall == true)
-                {
-                    isPickableBall = false;
-                    canvasScript.ChangePickableBallColor(false);
-                }
+                isPickableBall = false;
+                canvasScript.ChangePickableBallColor(false);
             }
+        }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             SceneManager.LoadScene(0);
         }
-        print(boton);
+
     }
 
     private void LateUpdate()

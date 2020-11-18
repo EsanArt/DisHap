@@ -10,7 +10,7 @@ using System;
 public class PlayerMovement : MonoBehaviour
 {
     //Cargando el lector del ARDUINO
-    public SerialPort serialPort = new SerialPort("COM3", 9600);
+    public static SerialPort serialPort = new SerialPort("COM3", 9600);
 
     public CharacterController controller;
     public float speed = 12f;
@@ -37,65 +37,48 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         serialPort.Open();
-        serialPort.ReadTimeout = 100;
-
+        //serialPort.ReadTimeout = 100;
     }
 
     void Update()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, radius, mask);
-
+        //print(serialPort);
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = gravity;
         }
 
-        try
+        if (serialPort.IsOpen)
         {
-            if (serialPort.IsOpen)
-            {
-                string s;
-
-
-                s = serialPort.ReadTo("\n");
-                valores = s.Split(' ');
-                x = int.Parse(valores[0]);
-                z = int.Parse(valores[1]);
-
-                move = transform.right * -(x-510)/1000f + transform.forward * (z-528)/1000f;
-                controller.Move(move * speed * Time.deltaTime);
-                velocity.y += gravity * Time.deltaTime;
-                controller.Move(velocity * Time.deltaTime);
-            }
-            else
-            {
-                x = Input.GetAxis("Horizontal");
-                z = Input.GetAxis("Vertical");
-
-                move = transform.right * x + transform.forward * z;
-                controller.Move(move * speed * Time.deltaTime);
-                if (Input.GetButtonDown("Jump") && isGrounded)
-                {
-                    velocity.y = Mathf.Sqrt(jumpForce * -2 * gravity);
-                }
-
-                velocity.y += gravity * Time.deltaTime;
-                controller.Move(velocity * Time.deltaTime);
-            }
-
+            string s;
+            s = serialPort.ReadTo("\n");
+            valores = s.Split(' ');
+            x = int.Parse(valores[0]);
+            z = int.Parse(valores[1]);
+        
+            move = transform.right * -(x-510)/1000f + transform.forward * (z-528)/1000f;
+            controller.Move(move * speed * Time.deltaTime);
+            velocity.y += gravity * Time.deltaTime;
+            controller.Move(velocity * Time.deltaTime);
         }
-        catch (System.Exception ex)
+        else
         {
-            ex = new System.Exception();
-        }
-
-
-
-
-
-
+            x = Input.GetAxis("Horizontal");
+            z = Input.GetAxis("Vertical");
+        
+            move = transform.right * x + transform.forward * z;
+            controller.Move(move * speed * Time.deltaTime);
 
 
         
+            velocity.y += gravity * Time.deltaTime;
+            controller.Move(velocity * Time.deltaTime);
+        }
+
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            velocity.y = Mathf.Sqrt(jumpForce * -2 * gravity);
+        }
     }
 }
