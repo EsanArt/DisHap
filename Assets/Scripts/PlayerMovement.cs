@@ -9,9 +9,8 @@ using System;
 
 public class PlayerMovement : MonoBehaviour
 {
+    //Cargando el lector del ARDUINO
     public SerialPort serialPort = new SerialPort("COM3", 9600);
-
-
 
     public CharacterController controller;
     public float speed = 12f;
