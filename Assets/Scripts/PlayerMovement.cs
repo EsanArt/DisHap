@@ -37,11 +37,12 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         serialPort.Open();
-        //serialPort.ReadTimeout = 100;
+        serialPort.ReadTimeout = 10;
     }
 
     void Update()
     {
+
         isGrounded = Physics.CheckSphere(groundCheck.position, radius, mask);
         //print(serialPort);
         if (isGrounded && velocity.y < 0)
@@ -51,16 +52,29 @@ public class PlayerMovement : MonoBehaviour
 
         if (serialPort.IsOpen)
         {
+
+            if (GameController.scorelights)
+            {
+                serialPort.Write("ON");
+                GameController.scorelights = false;
+
+            }
             string s;
             s = serialPort.ReadTo("\n");
             valores = s.Split(' ');
             x = int.Parse(valores[0]);
             z = int.Parse(valores[1]);
+            
+            if (((x - 510) / 500f) > 1 || ((x - 510) / 500f) < 1)
+            {
+                move = transform.right * -(x-510)/500f + transform.forward * -(z-528)/500f;
+                controller.Move(move * speed * Time.deltaTime);
+                velocity.y += gravity * Time.deltaTime;
+                controller.Move(velocity * Time.deltaTime);
+
+            }
         
-            move = transform.right * -(x-510)/500f + transform.forward * -(z-528)/500f;
-            controller.Move(move * speed * Time.deltaTime);
-            velocity.y += gravity * Time.deltaTime;
-            controller.Move(velocity * Time.deltaTime);
+            
         }
         else
         {
@@ -80,5 +94,6 @@ public class PlayerMovement : MonoBehaviour
         {
             velocity.y = Mathf.Sqrt(jumpForce * -2 * gravity);
         }
+        
     }
 }

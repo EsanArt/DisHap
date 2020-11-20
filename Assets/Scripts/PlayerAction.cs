@@ -108,6 +108,7 @@ public class PlayerAction : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            PlayerMovement.serialPort.Close();
             SceneManager.LoadScene(0);
         }
 

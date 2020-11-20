@@ -4,19 +4,30 @@
 #define joyY2 A2
 
 int xValue, yValue, x2Value, y2Value;
+//lightsout
+const int green = 7;
+const int red   = 5;
+const int blue  = 3;
 //botón
 const int throwball = 53;
 const int pickball = 51;
 const int ledPin = 13;
 int buttonState = 0;
 int buttonState2 = 0;
+
 void setup() {
   Serial.begin(9600);
+  Serial.setTimeout(10);
+  //lightsout
+  pinMode(green, OUTPUT);
+  pinMode(red, OUTPUT);
+  pinMode(blue, OUTPUT);
 
   //botón
   pinMode(ledPin, OUTPUT);
   pinMode(throwball, INPUT);
   pinMode(pickball, INPUT);
+
 }
 
 void loop() {
@@ -42,6 +53,11 @@ void loop() {
   }
   
   //datos enviados a Unity
+  
+  if (Serial.readString() == "ON"){
+    lightsOn();
+  }
+
   Serial.print(xValue);
   Serial.print(" ");
   Serial.print(yValue);
@@ -54,6 +70,20 @@ void loop() {
   Serial.print(" ");
   Serial.print(buttonState2);
   Serial.print('\n');
-  
+
   delay(10);
+}
+
+void lightsOn() {
+  digitalWrite(green, HIGH);
+  delay(200);
+  digitalWrite(green, LOW);
+  delay(100);
+  digitalWrite(red, HIGH);
+  delay(200);
+  digitalWrite(red, LOW);
+  delay(100);
+  digitalWrite(blue, HIGH);
+  delay(200); 
+  digitalWrite(blue, LOW); 
 }
