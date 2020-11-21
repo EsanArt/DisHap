@@ -7,7 +7,7 @@ using System.IO.Ports;
 
 public class PlayerAction : MonoBehaviour
 {
-    public GameObject ball;
+    public GameObject ball;//Para acceder a todas las propiedades
     SphereCollider ballCollider;
     TrailRenderer ballTrail;
     public Transform cam;
@@ -25,9 +25,9 @@ public class PlayerAction : MonoBehaviour
 
     
     bool isPickableBall = false;
-    public CanvasController canvasScript;
+    public CanvasController canvasScript;//Accediendo al script desde el inspector
     public LayerMask pickableLayer;
-    RaycastHit hit;
+    RaycastHit hit;//"Rayos" que se lanzan para detectar una colision
 
     string[] datoBoton = null;
     int boton;
@@ -41,8 +41,10 @@ public class PlayerAction : MonoBehaviour
         ballTrail = ball.GetComponent<TrailRenderer>();
         ballTrail.enabled = false;
         ballRB.useGravity = false;
+
         canvasScript.OcultarCursor(true);
         canvasScript.ActivarSlider(false);
+
         ballCollider.enabled = false;
 
     }
@@ -74,7 +76,7 @@ public class PlayerAction : MonoBehaviour
                 ballTrail.enabled = true;
             }
         }
-        else
+        else//Cuando no se tiene la pelota recogida
         {
             if (Physics.Raycast(cam.position, cam.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, pickableLayer))
             {
@@ -99,7 +101,7 @@ public class PlayerAction : MonoBehaviour
                     ballTrail.enabled = false;
                 }
             }
-            else if (isPickableBall == true)
+            else if (isPickableBall == true)//Cuando no se este tocando la pelota con el raycast
             {
                 isPickableBall = false;
                 canvasScript.ChangePickableBallColor(false);

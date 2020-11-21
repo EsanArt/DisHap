@@ -15,13 +15,13 @@ public class MouseController : MonoBehaviour
     float mouseX;
     float mouseY;
 
-    float yReal = 0.0f;
+    float yReal = 0.0f;//Para controlar la rotacion de la camara
 
     string[] analogData = null;
 
     private void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Locked;//Desaparece el cursor
         Cursor.visible = false;
     }
 

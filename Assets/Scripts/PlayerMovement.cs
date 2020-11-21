@@ -18,16 +18,17 @@ public class PlayerMovement : MonoBehaviour
     float x;
     float z;
 
-    Vector3 move;
+    Vector3 move;//Para la posicion
 
     //Gravedad
     Vector3 velocity;
     public float gravity = -15f;
 
-    public Transform groundCheck;
-    float radius = 0.4f;
-    public LayerMask mask;
-    bool isGrounded = false;
+    //Detectar si se esta tocando el suelo
+    public Transform groundCheck;//Pies
+    float radius = 0.4f;//Se detecta mediante un radio
+    public LayerMask mask;//El layer del suelo
+    bool isGrounded = false;//Si estamos tocando el suelo o no
 
     public float jumpForce = 1f;
 
@@ -86,14 +87,17 @@ public class PlayerMovement : MonoBehaviour
 
 
         
-            velocity.y += gravity * Time.deltaTime;
-            controller.Move(velocity * Time.deltaTime);
+            // velocity.y += gravity * Time.deltaTime;
+            // controller.Move(velocity * Time.deltaTime);
         }
 
+        //Salto
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpForce * -2 * gravity);
         }
-        
+
+        velocity.y += gravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
     }
 }

@@ -8,10 +8,10 @@ public class GameController : MonoBehaviour
 
     public static GameController instance;
 
-    public PlayerAction player;
+    public PlayerAction Player;
     public Transform ball;
-    public Transform canasta;
-    public bool canScore;
+    public Transform Canasta;
+    public bool canScore;//Cuando si y cuando no se puede canastar
 
     static public bool scorelights = false;
 
@@ -25,9 +25,9 @@ public class GameController : MonoBehaviour
     void Update()
     {
 
-        if (player.holdingBall == false)
+        if (Player.holdingBall == false)
         {
-            if (ball.position.y > canasta.position.y && canScore == false)
+            if (ball.position.y > Canasta.position.y && canScore == false)
             {
                 
                 canScore = true;
